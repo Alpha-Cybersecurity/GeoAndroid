@@ -6,12 +6,12 @@ import sqlite3
 
 #Constant
 
-YOUR_API_KEY = "YOUR API KEY HERE"
 URL = "https://www.googleapis.com/geolocation/v1/geolocate?key="
 
 WIGLE_WIFI_QUERY = "select lastlat, lastlon, bssid from network group by bssid"
 HERREAVAD_WIFI_QUERY = "select bssid from local_reports group by bssid"
 HERREAVAD_CELL_QUERY  = "select rowkey from lru_table group by rowkey"
+ASTRO_WIFI_QUERY = "select bssid from wifi_network group by bssid"
 
 
 
@@ -79,6 +79,7 @@ def AccesPointWifi(Bssid):
     geolocation.append(['Lat', 'Long', 'Name'])
 
     for mac in Bssid:
+        mac = mac[0]
         if mac is not None:
             datos = {
                 "wifiAccessPoints": [
@@ -87,7 +88,9 @@ def AccesPointWifi(Bssid):
                     }
                 ]
             }
-            geolocation.append(GoogleGeolocationAPI(datos, mac))
+            result = GoogleGeolocationAPI(datos, mac)
+            if result is not None:
+                geolocation.append(result)
 
     return geolocation
 
@@ -145,6 +148,7 @@ def TowerCell(CellTower):
     geolocation.append(['Lat', 'Long', 'Name'])
 
     for gsm in CellTower:
+        gsm = gsm[0]
         if gsm.startswith('gsm') or gsm.startswith('lte') or gsm.startswith('cdma'):
             gsm = gsm.split(":")
             datos = {
@@ -159,7 +163,9 @@ def TowerCell(CellTower):
                 ]
             }
 
-            geolocation.append(GoogleGeolocationAPI(datos, gsm[4]))
+            result = GoogleGeolocationAPI(datos, gsm[4])
+            if result is not None:
+                geolocation.append(result)
 
     return geolocation
 
@@ -207,6 +213,10 @@ if __name__ == '__main__':
             LocationBssid = SQLite(dbPath, WIGLE_WIFI_QUERY)
             LocationBssid.insert(0, ['Lat', 'Long', 'Name'])
             outputHtml("WIGLE_WIFI", str(LocationBssid))
+
+        elif args.type == "astro":
+            LocationBssid = AccesPointWifi(SQLite(dbPath, ASTRO_WIFI_QUERY))
+            outputHtml("ASTRO_WIFI",str(LocationBssid))
 
         else:
             print("Please, use a correct type")

@@ -64,11 +64,17 @@ Existe 4 maneras de posicionar un dispositivo sin necesidad de GPS
 Existen diferentes bases de datos de donde podemos sacar informacion.
 * Herrevad: This database contains the WiFi connections history of preinstalled Google apps in Android OS devices. It can be WIFI connections of Google Play, Google Maps, Youtube, etc    
     
-    /data/com.google.android.gms/databases/herrevad  
+        /data/com.google.android.gms/databases/herrevad  
     
-* Wigle:
+* Wigle: Open source network observation, positioning, and display client from the world's largest queryable database of wireless networks.
 
-* Astro:  
+        /data/net.wigle.wigleandroid/databases/wiglewifi.sqlite
+
+
+* Astro: Es un gestor de archivos que aparte de explorar, organizar, descargar y compartir archivos, tambien guarda todas las wifis y cell tower a las que el telefono se conecta.
+        
+        /data/com.metago.astro/databases/mdm.db  
+
 
 
 #### Instalar programa
